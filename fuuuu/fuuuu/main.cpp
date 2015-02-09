@@ -9,7 +9,7 @@
 #include <iostream>
 
 using namespace std;
-int main(int argc, const char * argv[]) {
+int main() {
     string first, last;
     cout << "Please enter your first and last name." << endl;
     cout << "Do not forget to press ENTER" << endl;
@@ -18,6 +18,6 @@ int main(int argc, const char * argv[]) {
     
     cout << "\nThis is my first program!" << endl;
     cout << "My name is: " << first << " " << last << endl;
-    
+    //system ("pause"); // Only required on Windows. Probably should be inside an ifdef, or replace cin with cin.get()
     return 0;
 } // end main}
