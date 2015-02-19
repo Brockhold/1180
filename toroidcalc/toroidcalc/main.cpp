@@ -11,10 +11,11 @@
  */
 
 #include <iostream>
+#include <math.h>
 using namespace std;
 
-// Define a mathematical constant, even though really I am sure this exists in a standard lib
-float pi = 3.1419;
+// Honestly this is probably not a good reason to have imported all of math.h
+static float pi = M_PI;
 
 // Function accepts r,R for a torus, and returns its volume
 float torus_volume(float r,float R){
