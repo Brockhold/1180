@@ -1,14 +1,34 @@
-
-*.xccheckout
-
-*.xcscheme
-
-*.xcbkptlist
-
+# C results
 *.o
 
+# OSX specifics
+*.swp
+*.out*
+*.pyc
+*.DS_Store
+
+# Xcode related files
+*/build/*
+*.pbxuser
+!default.pbxuser
+*.mode1v3
+!default.mode1v3
+*.mode2v3
+!default.mode2v3
+*.perspectivev3
+!default.perspectivev3
+xcuserdata
+profile
+*.moved-aside
+DerivedData
+.idea/
+*.hmap
+xcuserdata/*
+*.xccheckout
+*.xcworkspacedata
+doxygen_output/
+*.xcscheme
+*.xcbkptlist
 *.plist
-
 *.xcsettings
-
 *.xcuserstate
