@@ -1,0 +1,40 @@
+
+When the radius of the torus (R) is 4cm and the radius of the tube (r) is
+1cm the volume is 78.9568cm squared and its surface area is
+157.914cc. The area of the hole is 28.2743cm squared.
+
+When the radius of the torus (R) is 1.5cm and the radius of the tube (r) is
+0.5cm the volume is 7.4022cm squared and its surface area is
+29.6088cc. The area of the hole is 3.14159cm squared.
+
+When the radius of the torus (R) is 4cm and the radius of the tube (r) is
+0.5cm the volume is 19.7392cm squared and its surface area is
+78.9568cc. The area of the hole is 38.4845cm squared.
+
+When the radius of the torus (R) is 10cm and the radius of the tube (r) is
+5cm the volume is 4934.8cm squared and its surface area is
+1973.92cc. The area of the hole is 78.5398cm squared.
+
+When the radius of the torus (R) is 10cm and the radius of the tube (r) is
+1cm the volume is 197.392cm squared and its surface area is
+394.784cc. The area of the hole is 254.469cm squared.
+
+When the radius of the torus (R) is 100cm and the radius of the tube (r) is
+10cm the volume is 197392cm squared and its surface area is
+39478.4cc. The area of the hole is 25446.9cm squared.
+
+When the radius of the torus (R) is 417cm and the radius of the tube (r) is
+1cm the volume is 8231.25cm squared and its surface area is
+16462.5cc. The area of the hole is 543671cm squared.
+
+When the radius of the torus (R) is 9cm and the radius of the tube (r) is
+3.14cm the volume is 1751.59cm squared and its surface area is
+1115.66cc. The area of the hole is 107.881cm squared.
+
+When the radius of the torus (R) is 42cm and the radius of the tube (r) is
+1cm the volume is 829.047cm squared and its surface area is
+1658.09cc. The area of the hole is 5281.02cm squared.
+
+When the radius of the torus (R) is 100cm and the radius of the tube (r) is
+12cm the volume is 284245cm squared and its surface area is
+47374.1cc. The area of the hole is 24328.5cm squared.
