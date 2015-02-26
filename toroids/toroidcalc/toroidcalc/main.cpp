@@ -12,23 +12,37 @@ using namespace std;
 // We use pi^2 a few times
 static float pipi = pow(M_PI,2);
 
+// Receive torus specification from a user
+pair<float, float> userInput(void){
+    float major, minor;
+    cout << "Enter the toroid's major and minor radii -- enter 0 for either to exit.";
+    cout << "\nMajor Radius: ";
+    cin >> major;
+    cout << "\nMinor (tube) radius: ";
+    cin >> minor;
+    return 0:
+}
+
 // Function accepts r,R for a torus, and returns its volume
-float torus_volume(float r,float R){
+float torusVolume(float r,float R){
     return 2*pipi*R*r*r;
 }
 
 // Function accepts r,R for a torus, and returns its area
-float torus_area(float r,float R){
+float torusArea(float r,float R){
     return 4*pipi*R*r;
 }
 
 // Function accepts r,R for a torus, and returns its hole's area
-float hole_area(float r,float R){
+float holeArea(float r,float R){
     return M_PI*(R-r)*(R-r);
 }
 
 int main(int argc, char *argv[]) {
     // Format r,R where r is the radius of the tube, and R is the radius of the torus.
+    float foo, bar;
+    foo, bar = userInput();
+    cout << foo, bar;
     float toroids [][2] = {
         {1.0,4.0},
         {0.5,1.5},
@@ -45,9 +59,9 @@ int main(int argc, char *argv[]) {
         auto toroid = toroids[i];
         cout << "\nWhen the radius of the torus (R) is "<<toroid[1] << "cm ";
         cout << "and the radius of the tube (r) is\n" << toroid[0] << "cm ";
-        cout << "the volume is " << torus_volume(toroid[0],toroid[1]) << "cm squared";
-        cout << " and its surface area is\n" << torus_area(toroid[0], toroid[1]) << "cc. ";
-        cout << "The area of the hole is " << hole_area(toroid[0], toroid[1]) << "cm squared.\n";
+        cout << "the volume is " << torusVolume(toroid[0],toroid[1]) << "cm squared";
+        cout << " and its surface area is\n" << torusArea(toroid[0], toroid[1]) << "cc. ";
+        cout << "The area of the hole is " << holeArea(toroid[0], toroid[1]) << "cm squared.\n";
     }
     return EXIT_SUCCESS;
 } // End Main
