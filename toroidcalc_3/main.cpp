@@ -9,20 +9,18 @@
 #include <math.h>
 using namespace std;
 
-// We use pi^2 a few times
-static float pipi = pow(M_PI,2);
 
 // Function accepts r,R for a torus, and returns its volume
 float torus_volume(float r,float R){
-    return 2*pipi*R*r*r;
+    return 2*pow(M_PI,2)*R*r*r;
 }
 
-// Function accepts r,R for a torus, and returns its area
+// Function accepts r,R for a torus, and returns the surface area
 float torus_area(float r,float R){
-    return 4*pipi*R*r;
+    return 4*pow(M_PI,2)*R*r;
 }
 
-// Function accepts r,R for a torus, and returns its hole's area
+// Function accepts r,R for a torus, and returns the area of the hole
 float hole_area(float r,float R){
     return M_PI*(R-r)*(R-r);
 }
@@ -37,7 +35,7 @@ int main(int argc, char *argv[]) {
         {1.0,10.0},
         {10.0,100.0},
         {1.0,417.0},
-        {M_PI,pipi},
+        {M_PI,pow(M_PI,2)},
         {1.0,42.0},
         {12.0,100.0},
     };
@@ -48,11 +46,10 @@ int main(int argc, char *argv[]) {
         cout << " and its surface area is\n" << torus_area(toroids[i][0], toroids[i][1]) << "cc. ";
         cout << "The area of the hole is " << hole_area(toroids[i][0], toroids[i][1]) << "cm squared.\n";
     }
-    return 1;
+    return 0;
 } // End Main
 
 /*
-
  === Program Output ===
 
 When the radius of the torus (R) is 4cm and the radius of the tube (r) is
@@ -95,7 +92,7 @@ When the radius of the torus (R) is 100cm and the radius of the tube (r) is
 12cm the volume is 284245cm squared and its surface area is
 47374.1cc. The area of the hole is 24328.5cm squared.
 
-Process returned 1 (0x1)   execution time : 0.002 s
+Process returned 0 (0x0) execution time : 0.002 s
 Press ENTER to continue.
 
 */
