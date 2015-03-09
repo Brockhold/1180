@@ -1,5 +1,5 @@
 /*
- Name : Toroid Calculator
+ Name : Dopamine Drip Calculator
  Author: Ben Rockhold
  Date: 03/08/15
  Description: Dopamine drip calculator; requests desired dose and patient weight, checks for safety and returns drips per minute.
