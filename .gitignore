@@ -33,3 +33,4 @@ doxygen_output/
 *.plist
 *.xcsettings
 *.xcuserstate
+*project.pbxproj
