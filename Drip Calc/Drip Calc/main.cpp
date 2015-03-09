@@ -5,27 +5,11 @@
  Description: Dopamine drip calculator; requests desired dose and patient weight, checks for safety and returns drips per minute.
  */
 
-//#include <cstdio>       // printf
+
 #include <fstream>      // fileIO
 #include <iostream>     // cin/cout
 #include <string>       // string operations
 using namespace std;
-
-
-// Helper function writes both to cout and a file
-//void record(float weight, int dosage, float dripRate){
-//    ofstream dosage_record("dosage_record.txt");
-//    if (dosage_record.is_open()){
-//        
-//        cout << "foo";
-//        dosage_record << "foo";
-//        
-//        dosage_record.close();
-//    }
-//    
-//}
-
-
 
 
 // Validate drops per minute given a defined safety level
@@ -84,11 +68,10 @@ int main(int argc, char *argv[]) {
     float weight;
     float dosage;
     float dripRate;
-    dosage = getDosage();
-    weight = getWeight();
-    dripRate = dropCalculator(weight, dosage);
+    dosage = getDosage(); // Ask the user for the intended dosage
+    weight = getWeight(); // Ask the user for the patient's weight
+    dripRate = dropCalculator(weight, dosage); // Calculate the appropriate drip rate
     cout << endl << "Administer " << dripRate << " drops per minute." << endl;
-    //record(weight, dosage, dripRate);
     return 0;
 } // End Main
 
