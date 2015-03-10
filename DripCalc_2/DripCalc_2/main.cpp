@@ -43,6 +43,7 @@ void dosageTable(float weight){
     float dosage;
     if (dosage_report.is_open()){
         cout << endl << "Dose (mg/kg/min)\tGTT/Minute" << endl << endl;
+        dosage_report << endl << "Dose (mg/kg/min)\tGTT/Minute" << endl << endl;
         for(int i = 5; i<=10; i++){
             dosage = dropCalculator(weight, i);
             cout << "\t" << i << "\t\t\t\t\t" << dosage << endl;
