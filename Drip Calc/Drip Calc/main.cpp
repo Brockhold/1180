@@ -24,7 +24,7 @@ bool validateWeight(float weight){
     return 1;
 }
 
-// Ask user for intended dosage, accept only integers that pass validateDose()
+// Ask user for intended dosage, accepts only values that pass validateDose()
 float getDosage(){
     float dose;
     bool valid;
