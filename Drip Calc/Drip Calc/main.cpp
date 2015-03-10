@@ -8,9 +8,7 @@
 
 #include <fstream>      // fileIO
 #include <iostream>     // cin/cout
-#include <string>       // string operations
 using namespace std;
-
 
 // Validate drops per minute given a defined safety level
 bool validateDose(float dose){
@@ -64,7 +62,6 @@ float dropCalculator(float weight, float dosage){
 // Using above functions, process input and produce dosage rates
 int main(int argc, char *argv[]) {
     cout.precision(2);
-    ofstream dosage_report("dosage_report.txt");
     float weight;
     float dosage;
     float dripRate;
