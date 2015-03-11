@@ -23,31 +23,39 @@ bool validateWeight(float weight){
 }
 
 // Ask user for intended dosage, accepts only values that pass validateDose()
-float getDosage(){
+float getDosage(ofstream& log_file){
     float dose;
     bool valid;
+    const string error_msg = "Sorry, this dosage is not valid. \nCheck that the dose is an integer between 5-10 mcg/kg/min.";
     do {
         cout << "Please enter the desired dosage in mcg/kg/min: ";
+        log_file << "Please enter the desired dosage in mcg/kg/min: ";
         cin >> dose;
+        log_file << dose << endl;
         valid = validateDose(dose);
         if (!valid){
-            cout << "Sorry, this dosage is not valid." << endl;
-            cout << "Check that the dose is an integer between 5-10 mcg/kg/min." << endl;
+            cout << error_msg << endl;
+            log_file << error_msg << endl;
         }
     } while (!valid);
     return dose;
 }
 
 // Ask for patient's weight (kg)
-float getWeight(){
+float getWeight(ofstream& log_file){
     float weight;
+    const string request_msg = "Please enter patient's weight (kg): ";
+    const string error_msg = "Invalid weight (sub-0) entered.";
     bool validWeight;
     do {
-        cout << "Please enter patient's weight (kg): ";
+        cout << request_msg;
+        log_file << request_msg;
         cin >> weight;
+        log_file << weight << endl;
         validWeight = validateWeight(weight);
         if (!validWeight){
-            cout << endl << "Invalid weight (sub-0) entered." << endl;
+            cout << endl << error_msg << endl;
+            log_file << error_msg << endl;
         }
     } while (!validWeight);
     return weight;
@@ -65,10 +73,15 @@ int main(int argc, char *argv[]) {
     float weight;
     float dosage;
     float dripRate;
-    dosage = getDosage(); // Ask the user for the intended dosage
-    weight = getWeight(); // Ask the user for the patient's weight
-    dripRate = dropCalculator(weight, dosage); // Calculate the appropriate drip rate
-    cout << endl << "Administer " << dripRate << " drops per minute." << endl;
+    ofstream dosage_report("dosage_report.txt", ios::app);
+    if (dosage_report.is_open()){
+        dosage = getDosage(dosage_report); // Ask the user for the intended dosage
+        weight = getWeight(dosage_report); // Ask the user for the patient's weight
+        dripRate = dropCalculator(weight, dosage); // Calculate the appropriate drip rate
+        dosage_report << "To give a dose of "<< dosage <<"mg/kg/min to a " << weight << "kg patient, ";
+        dosage_report << "administer " << dripRate << " drops per minute." << endl << endl;
+        cout << endl << "Administer " << dripRate << " drops per minute." << endl;
+    }
     return 0;
 } // End Main
 

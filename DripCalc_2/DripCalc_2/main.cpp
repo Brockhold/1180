@@ -57,6 +57,7 @@ void dosageTable(float weight){
 int main(int argc, char *argv[]) {
     cout.precision(2);
     ofstream dosage_report("dosage_report.txt");
+    dosage_report.precision(2);
     float weight;
     weight = getWeight(); // Ask the user for the patient's weight
     dosageTable(weight);
