@@ -25,7 +25,6 @@ using namespace std;
 double ranged_rand(){
     return ((float)rand() / RAND_MAX)*2-1;
 }
-
 // Given a set number of iterations, calculate pi by way of a Monte Carlo method.
 // Returns its estimation when done iterating.
 double pi_guesstimator(int random_count){

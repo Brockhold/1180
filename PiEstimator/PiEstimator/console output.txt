@@ -1,0 +1,8 @@
+Finding Pi...
+Found 3.1415 in 0.001262 seconds and 9407 iterations.
+Average Iterations: 182252
+Average time: 0.0274563 seconds
+Please enter the number of random values to generate: 5000
+Calulating...
+Found a value of 3.1496 in 5000 iterations.
+Program ended with exit code: 0

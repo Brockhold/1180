@@ -1,0 +1,10 @@
+
+1)
+	Through observation of a large number of iterations, my program generally arrives at a "correct" estimation of Pi in under 100,000 iterations. However, due to the random nature of the program, it is similarly likely to require millions of iterations.
+
+2)
+	To explore how long it takes my hardware (an Intel Core i7, 2.2GHz) to calculate the value by our Monte Carlo method, I ran the process one hundred times, averaging the time taken and number of iterations required. The average iterations required was over one million, at 0.2 seconds per evaluation. This rather extreme evaluation time and iteration number seems to be much higher than anticipated, and is dramatically higher than any single run I have performed. Anecdotally, a typical run takes a very small faction of a second. However, when instructed to perform this calculation of Pi one thousand times, the program did not return an answer in half an hour, and was terminated. The highest iteration count at termination exceeded 1,000,000,000,000 and had taken multiple minutes.
+
+3)
+	The random number generator rand() is weakly pseudo-random. Unless seeded by another pseudo-random source is very easy to predict. Additionally, on my system the range of rand() is only [0,2147483647], very small as compared with a 64-bit integer. The rand() function is expected to have a uniform distribution of values, and thus over many iterations the likelihood of repeating itself increases with time. This is a limitation of the kind of problem that rand() is based on, rather than a problem with a specific implementation of rand(). Other sources of random numbers can be found in mathematically 'hard' problems like prime number factorization and the observation of physical phenomena such as radioactive decay. These are often found at the basis of cryptographic systems, for which statistical randomness is of utmost importance. Additionally, most computer systems come with dedicated random number generating hardware; the process these perform is often proprietary and assumed to be secret, and therefore secure. Whether they are also predictable is out of scope for this work.
+
