@@ -14,7 +14,8 @@
 #include <iostream>
 using namespace std;
 
-const int debug_messages = true; // Writes rather verbose information about what was converted and why
+// Writes rather verbose information about what was converted and why
+const int debug_messages = false;
 
 // Ask the user for an integer between 1 and 95
 int getKey(){
@@ -33,7 +34,9 @@ char getCharacter(ifstream& inputFile){
     inputFile.get(nextChar);
     // Filter non-ASCII chars
     if (nextChar < 32 || nextChar > 126){
-        if (debug_messages) cout << "    Invalid ASCII" << " : " << (int)nextChar << endl;
+        if (debug_messages){
+            cout << "    Invalid ASCII" << " : " << (int)nextChar << endl;
+        }
         return 0; // return a null, filtered later
     }
     return nextChar;
@@ -46,7 +49,7 @@ void caeserCipher(char input, int cipherOffset, ofstream& outputFile){
     if (input != 0){
         // Write each character and its ASCII integer to console for debugging
         if (debug_messages) cout << input << " : " << (int)input;
-        // Add the offset to the input char, and if the resutl is > 126, wrap it back to 32
+        // Add offset to the input char, if result > 126, wrap it back to 32
         int outputChar = (int)input + cipherOffset;
         if (debug_messages) cout << "\t-O> " << (int)outputChar;
         if (outputChar > 126){
@@ -70,33 +73,46 @@ char deCaeserCipher(char input, int cipherOffset){
 
 // Given an offset and a cipherFile, produces the file decodedMessage
 void crack(int offset, ifstream& cipherFile, ofstream& decodedMessage){
+    cipherFile.clear();
+    // eof continues to be false
+    cipherFile.seekg(0, ios::beg);
+    decodedMessage << "Deciphered with offset " << offset << endl;
     while(!cipherFile.eof()){
-        decodedMessage << deCaeserCipher(getCharacter(cipherFile), offset);
+        char decodedChar = deCaeserCipher(getCharacter(cipherFile), offset);
+        cout << decodedChar;
+        decodedMessage << decodedChar;
     }
+    decodedMessage << endl;
 }
 
 int confirmCrack(){
-    cout << "Please check decodedMessage.txt and verify that it is inteligible" << endl;
-    cout << "Is the mesage cracked? (y/N)" << endl;
+    cout << endl << "Is the mesage cracked? (y/N)" << endl;
     string reponse;
     cin >> reponse;
     cout << endl;
     if (reponse == "Y" || reponse == "y"){
-        cout << "Hooray!" << endl;;
         return 1;
     }
     return 0;
 }
 
 // Calls crack* with offset equal to every value in the range lower-upper
-void crackCaesarsCipher(int upperLimit, int lowerLimit, ifstream& cipherFile, ofstream& decodedMessage){
+void crackCaesarsCipher(int lowerLimit,
+                        int upperLimit,
+                        ifstream& cipherFile,
+                        ofstream& decodedMessage){
     int offset = lowerLimit;
-    bool crackedYet = false;
+    bool crackedYet = 0;
     // If it's not cracked yet, continue
     while(!crackedYet && offset <= upperLimit){
-        cout << "Attempting to decode with offset " << offset << "..." << endl;
+        cout << "Attempting to decode with offset " << offset << ":" << endl;
         crack(offset, cipherFile, decodedMessage);
+        offset += 1;
         crackedYet = confirmCrack();
+        if (crackedYet){
+            cout << "Cracking complete!"<<endl;
+            decodedMessage << "User confirms success for offset "<< offset;
+        }
     }
 }
 
@@ -105,13 +121,11 @@ void crackCaesarsCipher(int upperLimit, int lowerLimit, ifstream& cipherFile, of
 /*
  Part I:
     First performs encoding of plaintext.txt into ciphertext.txt
-    Then reads back ciphertext.txt using the originally supplied offset (for verification purposes)
  Part II:
-    Attempts to break the cipher by processing secretMessage.txt with every offset in a user-specified range
-    It will stop after each attempt and ask the user to confirm whether the crack succedded
- 
+    Attempts to break the cipher on secretMessage.txt
+        uses every offset specified by user in the range lower-upper
+    Stops after each attempt to ask the user to confirm if the crack succeeded
 */
-
 int main() {
     ifstream plaintext("plaintext.txt");
     ofstream ciphertext("ciphertext.txt");
@@ -133,10 +147,10 @@ int main() {
     int upper, lower;
     ifstream secretMessage("secretMessage.txt");
     ofstream decodedMessage("decodedMessage.txt");
-    cout << endl << "Now attempting to break the cipher on secretMessage.txt" << endl;
+    cout << endl << "Attempting to crack secretMessage.txt" << endl;
     cout << "Please enter a value for the offset to start from: ";
     cin >> lower;
-    cout << endl << "Now enter the value for the upper limit for the offset range: ";
+    cout << endl << "Now enter the value for the upper limit for the offset: ";
     cin >> upper;
     cout << endl;
     crackCaesarsCipher(lower, upper, secretMessage, decodedMessage);
