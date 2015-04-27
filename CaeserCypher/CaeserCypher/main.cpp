@@ -3,20 +3,29 @@
  Author: Ben Rockhold
  Date: 04/20/15
  Description: 
-    Asks the user (via cin) for a ceasar cypher offset value.
+  Part I:
+    Asks the user (via cin) for a ceasar cipher offset value.
     Reads in the file "plaintext.txt" and encodes each character of input 
     by rotating it through the alphabet by the offset value.
     (ignores any chracter with an ASCII value outside the inclusive range 32-95)
     Writes the results of the encoding to the file "ciphertext.txt"
+  Part II:
+    Attempts to break the cipher on secretMessage.txt
+        uses every offset specified by user in the range lower-upper
+        prints all decoded data to decodedMessage.txt
+    Optional debug setting:
+        Prints each attempt for user confirmation if the crack succeeded
 */
 
 #include <fstream>
 #include <iostream>
 using namespace std;
 
+
 // Writes rather verbose information about what was converted and why
-//  ALso enables interactive mode in the decypter
+// Also enables interactive mode in the decypter
 const int debug_messages = false;
+
 
 // Ask the user for an integer between 1 and 95
 int getKey(){
@@ -25,7 +34,7 @@ int getKey(){
         cout << "Please enter a valid cipher offset (between 1 and 95): ";
         cin >> offsetKey;
         cout << endl;
-    } while (1 > offsetKey || offsetKey > 95);
+    } while (1 > offsetKey || offsetKey > 95); // Enforce 1-95 inclusive range
     return offsetKey;
 }
 
@@ -33,15 +42,17 @@ int getKey(){
 char getCharacter(ifstream& inputFile){
     char nextChar;
     if (inputFile.get(nextChar)){
-        // Filter non-ASCII chars (returns null)
+        // Filter out undesirable ASCII chars
         if (nextChar < 32 || nextChar > 126){
             if (debug_messages){
-                cout << "    Invalid ASCII" << " : " << (int)nextChar << endl;
+                cout << "Invalid ASCII : " << (int)nextChar << endl;
             }
             return 0; // return a null, filtered later
         }
+        // everything is just dandy, return the char
         return nextChar;
     }
+    // return null if fstream.get returns an error
     return 0;
 }
 
@@ -75,9 +86,8 @@ char deCaeserCipher(char input, int cipherOffset){
 // Given an offset and a cipherFile, produces the file decodedMessage
 void crack(int offset, ifstream& cipherFile, ofstream& decodedMessage){
     cipherFile.clear();
-    // eof continues to be false
-    cipherFile.seekg(0, ios::beg);
-    decodedMessage << "Deciphered with offset " << offset << endl;
+    cipherFile.seekg(0, ios::beg); // seek to start of file
+    decodedMessage << "Deciphered with offset: " << offset << endl;
     char decodedChar;
     while(true){
         decodedChar = deCaeserCipher(getCharacter(cipherFile), offset);
@@ -89,6 +99,7 @@ void crack(int offset, ifstream& cipherFile, ofstream& decodedMessage){
     decodedMessage << endl;
 }
 
+// User interaction, only utilized when debug_messages = true
 int confirmCrack(){
     cout << endl << "Is the mesage cracked? (y/N)" << endl;
     string reponse;
@@ -124,18 +135,6 @@ void crackCaesarsCipher(int lowerLimit,
     }
 }
 
-
-
-/*
- Part I:
-    First performs encoding of plaintext.txt into ciphertext.txt
- Part II:
-    Attempts to break the cipher on secretMessage.txt
-        uses every offset specified by user in the range lower-upper
-        prints all decoded data to decodedMessage.txt
-    Optional debug setting:
-        Prints each attempt for user confirmation if the crack succeeded
-*/
 int main() {
     ifstream plaintext("plaintext.txt");
     ofstream ciphertext("ciphertext.txt");
