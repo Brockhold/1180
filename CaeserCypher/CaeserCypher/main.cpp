@@ -79,7 +79,7 @@ void crack(int offset, ifstream& cipherFile, ofstream& decodedMessage){
     decodedMessage << "Deciphered with offset " << offset << endl;
     while(!cipherFile.eof()){
         char decodedChar = deCaeserCipher(getCharacter(cipherFile), offset);
-        cout << decodedChar;
+        if (debug_messages) cout << decodedChar;
         decodedMessage << decodedChar;
     }
     decodedMessage << endl;
@@ -102,13 +102,17 @@ void crackCaesarsCipher(int lowerLimit,
                         ifstream& cipherFile,
                         ofstream& decodedMessage){
     int offset = lowerLimit;
-    bool crackedYet = 0;
+    bool crackedYet = 0; // used for human interaction
     // If it's not cracked yet, continue
     while(!crackedYet && offset <= upperLimit){
-        cout << "Attempting to decode with offset " << offset << ":" << endl;
+        if (debug_messages){
+            cout << "Decoding with offset " << offset << ":" << endl;
+        }
         crack(offset, cipherFile, decodedMessage);
         offset += 1;
-        crackedYet = confirmCrack();
+        if (debug_messages){
+            crackedYet = confirmCrack();
+        }
         if (crackedYet){
             cout << "Cracking complete!"<<endl;
             decodedMessage << "User confirms success for offset "<< offset;
@@ -130,8 +134,10 @@ int main() {
     ifstream plaintext("plaintext.txt");
     ofstream ciphertext("ciphertext.txt");
     int offset = getKey();
-    while(!plaintext.eof()){
-        caeserCipher(getCharacter(plaintext),offset,ciphertext);
+    if (plaintext.is_open() & ciphertext.is_open()){
+        while(!plaintext.eof()){
+            caeserCipher(getCharacter(plaintext),offset,ciphertext);
+        }
     }
     plaintext.close();
     ciphertext.close();
@@ -144,6 +150,7 @@ int main() {
             deCaeserCipher(getCharacter(deciphertext),offset);
         }
     }
+    // Begin Part II; cracking secretMessage.txt
     int upper, lower;
     ifstream secretMessage("secretMessage.txt");
     ofstream decodedMessage("decodedMessage.txt");
@@ -153,7 +160,10 @@ int main() {
     cout << endl << "Now enter the value for the upper limit for the offset: ";
     cin >> upper;
     cout << endl;
-    crackCaesarsCipher(lower, upper, secretMessage, decodedMessage);
+    if (secretMessage.is_open() & decodedMessage.is_open()){
+        crackCaesarsCipher(lower, upper, secretMessage, decodedMessage);
+    }
+    cout << "Process complete; check decodedMessage.txt" << endl;
     return 0;
 }
 
