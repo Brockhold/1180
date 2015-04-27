@@ -31,7 +31,7 @@ const int debug_messages = false;
 int getKey(){
     int offsetKey;
     do {
-        cout << "Please enter a valid cipher offset (between 1 and 95): ";
+        cout << " (between 1 and 95): ";
         cin >> offsetKey;
         cout << endl;
     } while (1 > offsetKey || offsetKey > 95); // Enforce 1-95 inclusive range
@@ -138,6 +138,7 @@ void crackCaesarsCipher(int lowerLimit,
 int main() {
     ifstream plaintext("plaintext.txt");
     ofstream ciphertext("ciphertext.txt");
+    cout << "Please enter a valid cipher offset";
     int offset = getKey();
     if (plaintext.is_open() & ciphertext.is_open()){
         while(!plaintext.eof()){
@@ -156,15 +157,18 @@ int main() {
         }
     }
     // Begin Part II; cracking secretMessage.txt
-    int upper, lower;
+    int upper = 0;
+    int lower = 1;
     ifstream secretMessage("secretMessage.txt");
     ofstream decodedMessage("decodedMessage.txt");
-    cout << endl << "Attempting to crack secretMessage.txt" << endl;
-    cout << "Please enter a value for the offset to start from: ";
-    cin >> lower;
-    cout << "Now enter the value for the upper limit for the offset: ";
-    cin >> upper;
-    cout << endl;
+    cout << "Attempting to crack secretMessage.txt" << endl;
+    // Prevent bad ranges
+    while (upper < lower){
+        cout << "Please enter a lower limit ";
+        lower = getKey();
+        cout << "Pleae enter an upper limit ";
+        upper = getKey();
+    }
     if (secretMessage.is_open() & decodedMessage.is_open()){
         crackCaesarsCipher(lower, upper, secretMessage, decodedMessage);
     }
