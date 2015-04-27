@@ -31,7 +31,7 @@ const int debug_messages = false;
 int getKey(){
     int offsetKey;
     do {
-        cout << " (between 1 and 95): ";
+        cout << "(between 1 and 95): ";
         cin >> offsetKey;
         cout << endl;
     } while (1 > offsetKey || offsetKey > 95); // Enforce 1-95 inclusive range
@@ -70,7 +70,6 @@ void caeserCipher(char input, int cipherOffset, ofstream& outputFile){
             if (debug_messages) cout << "\t-W> " << (int)outputChar;
         }
         if (debug_messages) cout << "\t : " << (char)outputChar << endl;
-        //cout << outputChar << " : " << (int)outputChar << endl << endl;
         outputFile << (char)outputChar;
     }
 }
@@ -79,7 +78,6 @@ void caeserCipher(char input, int cipherOffset, ofstream& outputFile){
 char deCaeserCipher(char input, int cipherOffset){
     char outputChar = (int)input - cipherOffset;
     if (outputChar < 32) outputChar = outputChar + 95;
-    if (debug_messages) cout << outputChar;
     return outputChar;
 }
 
@@ -103,11 +101,11 @@ void crack(int offset, ifstream& cipherFile, ofstream& decodedMessage){
 int confirmCrack(){
     cout << endl << "Is the mesage cracked? (y/N)" << endl;
     string reponse;
-    cin >> reponse;
+    reponse = cin.get();
     cout << endl;
     if (reponse == "Y" || reponse == "y"){
         return 1;
-    }
+    } else if (reponse == "\n") return 0;
     return 0;
 }
 
@@ -162,8 +160,8 @@ int main() {
     ifstream secretMessage("secretMessage.txt");
     ofstream decodedMessage("decodedMessage.txt");
     cout << "Attempting to crack secretMessage.txt" << endl;
-    // Prevent bad ranges
-    while (upper < lower){
+    // Prevent bad user-defined ranges
+    while (upper <= lower){
         cout << "Please enter a lower limit ";
         lower = getKey();
         cout << "Pleae enter an upper limit ";
