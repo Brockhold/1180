@@ -15,6 +15,7 @@
 using namespace std;
 
 // Writes rather verbose information about what was converted and why
+//  ALso enables interactive mode in the decypter
 const int debug_messages = false;
 
 // Ask the user for an integer between 1 and 95
@@ -31,16 +32,17 @@ int getKey(){
 // Fetches the next valid char from the input file
 char getCharacter(ifstream& inputFile){
     char nextChar;
-    inputFile.get(nextChar);
-    // Filter non-ASCII chars
-    if (nextChar < 32 || nextChar > 126){
-        if (debug_messages){
-            cout << "    Invalid ASCII" << " : " << (int)nextChar << endl;
+    if (inputFile.get(nextChar)){
+        // Filter non-ASCII chars (returns null)
+        if (nextChar < 32 || nextChar > 126){
+            if (debug_messages){
+                cout << "    Invalid ASCII" << " : " << (int)nextChar << endl;
+            }
+            return 0; // return a null, filtered later
         }
-        return 0; // return a null, filtered later
+        return nextChar;
     }
-    return nextChar;
-    // this needs to fetch only valid chars (between 32 and 126)
+    return 0;
 }
 
 // Encipher each input char with the cipherOffset, and write to outputFile
@@ -62,7 +64,7 @@ void caeserCipher(char input, int cipherOffset, ofstream& outputFile){
     }
 }
 
-// The reverse of the above
+// Subtracts an offset from a char, and returns the char (between 32-126)
 char deCaeserCipher(char input, int cipherOffset){
     char outputChar = (int)input - cipherOffset;
     if (outputChar < 32) outputChar = outputChar + 95;
@@ -70,15 +72,17 @@ char deCaeserCipher(char input, int cipherOffset){
     return outputChar;
 }
 
-
 // Given an offset and a cipherFile, produces the file decodedMessage
 void crack(int offset, ifstream& cipherFile, ofstream& decodedMessage){
     cipherFile.clear();
     // eof continues to be false
     cipherFile.seekg(0, ios::beg);
     decodedMessage << "Deciphered with offset " << offset << endl;
-    while(!cipherFile.eof()){
-        char decodedChar = deCaeserCipher(getCharacter(cipherFile), offset);
+    char decodedChar;
+    while(true){
+        decodedChar = deCaeserCipher(getCharacter(cipherFile), offset);
+        // Break on either EOF or a null is returned
+        if (cipherFile.eof() || decodedChar == 0) break;
         if (debug_messages) cout << decodedChar;
         decodedMessage << decodedChar;
     }
@@ -128,7 +132,9 @@ void crackCaesarsCipher(int lowerLimit,
  Part II:
     Attempts to break the cipher on secretMessage.txt
         uses every offset specified by user in the range lower-upper
-    Stops after each attempt to ask the user to confirm if the crack succeeded
+        prints all decoded data to decodedMessage.txt
+    Optional debug setting:
+        Prints each attempt for user confirmation if the crack succeeded
 */
 int main() {
     ifstream plaintext("plaintext.txt");
@@ -157,7 +163,7 @@ int main() {
     cout << endl << "Attempting to crack secretMessage.txt" << endl;
     cout << "Please enter a value for the offset to start from: ";
     cin >> lower;
-    cout << endl << "Now enter the value for the upper limit for the offset: ";
+    cout << "Now enter the value for the upper limit for the offset: ";
     cin >> upper;
     cout << endl;
     if (secretMessage.is_open() & decodedMessage.is_open()){
@@ -166,13 +172,3 @@ int main() {
     cout << "Process complete; check decodedMessage.txt" << endl;
     return 0;
 }
-
-
-// to convert a letter to a number, you can simply subtract 'a' from it;
-// a-a = 0
-// b-a = 1
-// you will also need to convert or ignore capital characters
-
-// cout.width
-// cout << right << blah blach blah
-//
