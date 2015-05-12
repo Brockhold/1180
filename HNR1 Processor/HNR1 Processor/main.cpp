@@ -127,10 +127,9 @@ void debugReadArray(codonTable_t codonTable){
 // given an ifstream, return a string with the file's contents
 string loadSequence(ifstream &file){
     if (file){
-        string sequence = (string((istreambuf_iterator<char>(file)),
+        return (string((istreambuf_iterator<char>(file)),
                        istreambuf_iterator<char>()));
-        sequence = sequence.substr(0,sequence.length()-sequence.length()%3);
-        return sequence;
+
     }
     return "File read failure";
 }
