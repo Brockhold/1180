@@ -31,7 +31,31 @@ void readRNACodonTable(ifstream &inFile,
 // Given a 2D array of [codon, abbreviation], sort the array by codon
 // (modifies original array and returns nothing)
 void sortCodons(string codonTable[RNAArrayLength][2]){
-    
+    string previous(codonTable[0][0]), next, temp[2];
+    bool ordered = false;
+    // Lets try to bubblesort codons alphabetically!
+    for (int outer=0;
+         outer < RNAArrayLength-1 && ordered == false;
+         outer++){
+        ordered = true; // If this is not reset by the inner loop, we are done
+        for (int inner = 0;
+             inner < RNAArrayLength-outer-1;
+             inner++){
+            if (codonTable[inner][0] > codonTable[inner+1][0]){
+                // The current item is greater than the next item, so swap them
+                ordered = false;
+                // Store the current values in temp
+                temp[0] = codonTable[inner][0];
+                temp[1] = codonTable[inner][1];
+                // Replace the current item with the next item
+                codonTable[inner][0] = codonTable[inner+1][0];
+                codonTable[inner][1] = codonTable[inner+1][1];
+                // Assign the next item the values in temp
+                codonTable[inner+1][0] = temp[0];
+                codonTable[inner+1][1] = temp[1];
+            } // swapping complete
+        }
+    }
 }
 
 // Given a string "codon" and an array of codon abbreviations, return
@@ -57,7 +81,9 @@ string DNAtoRNA(string DNA){
 }
 
 // Given two seqences, prints the position and base of each codon difference
-void difference(string sequenceA, string sequenceB, string codonTable[RNAArrayLength][2]){
+void difference(string sequenceA,
+                string sequenceB,
+                string codonTable[RNAArrayLength][2]){
     if (sequenceA.length() != sequenceB.length()){
         cout << "Length error" << endl;
         return;
@@ -75,9 +101,7 @@ void difference(string sequenceA, string sequenceB, string codonTable[RNAArrayLe
             cout << subB << " = " << proteinB;
             cout << endl;
         }
-        
     }
-    
 }
 
 // Debug: read out the codon array
@@ -109,11 +133,8 @@ int main() {
     string chickenSequence = loadSequence(chickenFile);
     string humanSequence = loadSequence(humanFile);
     string chimpSequence = loadSequence(chimpFile);
-    //debugReadArray(codonArray);
-    // Sort codon array
+    // Sort codon array alphabetically
     sortCodons(codonArray);
-    //debugReadArray(codonArray);
-    
     // Compare chicken and human HNR1 sequences
     cout << endl << "Comparing chicken to human:" << endl;
     difference(chickenSequence, humanSequence, codonArray);
@@ -125,10 +146,7 @@ int main() {
     // Compare chicken and chimp sequences
     cout << endl << "Comparing chicken to chimp:" << endl;
     difference(chickenSequence, chimpSequence, codonArray);
-    
-    
-    
-    
+        
     return 0;
 }
 
