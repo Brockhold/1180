@@ -23,25 +23,33 @@
 using namespace std;
 
 // This value *must* match the number of lines in "codons.txt"
+// Why are you not setting this based on the number of lines that are actually in the input? Is there
+// something magic about 65? If there is, you should mention it here.
 const int RNAArrayLength = 65;
+
+typedef string CodonTable_t[RNAArrayLength][2];
 
 // Read each line of an ifstream (up to RNAArrayLength lines) and write
 // the first and second words on each line into 2D array "codonArray"
 void readRNACodonTable(ifstream &inFile,
-                       string codonArray[RNAArrayLength][2]){
+                       CodonTable_t codonTable){
     string a, b;
     if (inFile.is_open() &! inFile.eof()){
         for (int i=0; i < RNAArrayLength; i++){
             inFile >> a >> b;
-            codonArray[i][0] = a;
-            codonArray[i][1] = b;
+            // name the variables a and b with something meaningful;
+            // use constants here and elsewhere instead of 0 and 1, eg kCodonKey and kThingyValue
+            codonTable[i][0] = a;
+            codonTable[i][1] = b;
         }
     }
 }
 
 // Given a 2D array of [codon, abbreviation], sort the array by codon
 // (modifies original array and returns nothing)
-void sortCodons(string codonTable[RNAArrayLength][2]){
+// Do you have to do this sorting yourself, rather than using a standard library routine?
+// Also, have you tested this sort? It works, right?
+void sortCodons(CodonTable_t codonTable){
     string previous(codonTable[0][0]), next, temp[2];
     bool ordered = false;
     // Lets try to bubblesort codons alphabetically!
@@ -71,17 +79,23 @@ void sortCodons(string codonTable[RNAArrayLength][2]){
 
 // Given a string "codon" and an array of codon abbreviations, return
 // the corresponding abbreviation for this codon
-string codonLookup(string codon, string codonTable[RNAArrayLength][2]){
+// This should probably be 'codonFromThingy' or 'thingyFromCodon'
+string codonLookup(string codon, CodonTable_t codonTable){
     //cout << "(" << codon << ")";
     for (int i=0; i < RNAArrayLength; i++){
         if (codonTable[i][0] == codon){
             return codonTable[i][1];
         }
     }
-    return "Invalid Codon";
+    return "Invalid Codon"; // this should be a constant too
+    // Weirdly, there doesn't seem to be any place you check for that.
+    // A more conventional signature for this method would be
+    // bool codonLookup(CodonTable_t codonTable, const string& codonKey, string& value);
+    // But this is OK too
 }
 
 // Given a string, swap any T characters with U
+// There is a standard library method or global function on string that replaces substrings, I'm very sure
 string DNAtoRNA(string DNA){
     for (int c=0; c < DNA.length(); c++){
         if (DNA[c] == 'T'){
@@ -94,7 +108,7 @@ string DNAtoRNA(string DNA){
 // Given two seqences, prints the position and base of each codon difference
 void difference(string sequenceA,
                 string sequenceB,
-                string codonTable[RNAArrayLength][2]){
+                CodonTable_t codonTable){
     if (sequenceA.length() != sequenceB.length()){
         cout << "Length error" << endl;
         return;
@@ -116,7 +130,7 @@ void difference(string sequenceA,
 }
 
 // Debug: read out the codon array
-void debugReadArray(string codonArray[RNAArrayLength][2]){
+void debugReadArray(CodonTable_t codonArray){
     for (int i=0; i < RNAArrayLength; i++){
         cout << codonArray[i][0] << " " << codonArray[i][1] << endl;
     }
@@ -128,24 +142,32 @@ string loadSequence(ifstream &file){
         return(string((istreambuf_iterator<char>(file)),
                        istreambuf_iterator<char>()));
     }
+    // Another sort of ideosyncratic failure reporting technique
     return "File read failure";
+    
+    // I think I'd have this function look more like:
+    // bool loadSequence(ifstream &file, string& sequence);
 }
 
+// It does look a lot like there's a latent class, CordonTable, with methods
+// like .read(), .sort(), .lookUp(const string& key), and .difference(Sequence, Sequence)
 
 int main() {
-    string codonArray[RNAArrayLength][2];
+    CodonTable_t codonArray;
     ifstream RNACodonList("Codons.txt");
     readRNACodonTable(RNACodonList, codonArray);
+    // Sort codon array alphabetically
+    sortCodons(codonArray);
 
     ifstream chickenFile("ChickenHNR1.txt");
     ifstream humanFile("HumanHNR1.txt");
     ifstream chimpFile("ChimpanzeeHNR1.txt");
     // Build strings out of files
+    // Here's where a lot of guys would be checking the failure return code that you don't have
     string chickenSequence = loadSequence(chickenFile);
     string humanSequence = loadSequence(humanFile);
     string chimpSequence = loadSequence(chimpFile);
-    // Sort codon array alphabetically
-    sortCodons(codonArray);
+
     // Compare chicken and human HNR1 sequences
     cout << endl << "Comparing chicken to human:" << endl;
     difference(chickenSequence, humanSequence, codonArray);
