@@ -30,6 +30,9 @@ const int RNAArrayLength = 65;
 // abbreviation of the protein it encoes.
 typedef string codonTable_t[RNAArrayLength][2];
 
+// THis program emits all output to this file
+ofstream outputFile("HNR1 Output.txt");
+
 // Read each line of an ifstream (up to RNAArrayLength lines) and write
 // the first and second words on each line into 2D array "codonArray"
 void readRNACodonTable(ifstream &inFile, codonTable_t codonTable){
@@ -97,7 +100,7 @@ string DNAtoRNA(string DNA){
 // Given two seqences, prints the position and base of each protein difference
 void difference(string sequenceA, string sequenceB, codonTable_t codonTable){
     if (sequenceA.length() != sequenceB.length()){
-        cout << "Length error" << endl;
+        outputFile << "Length error" << endl;
         return;
     }
     // read both strings in substring bites of 3
@@ -108,11 +111,11 @@ void difference(string sequenceA, string sequenceB, codonTable_t codonTable){
         string proteinB = codonLookup(subB, codonTable);
         
         if (proteinA != proteinB){
-            cout << "Codon difference at position " << i << ":" << endl;
-            cout << subA << " = " << proteinA;
-            cout << " : ";
-            cout << subB << " = " << proteinB;
-            cout << endl;
+            outputFile << "Codon difference at position " << i << ":" << endl;
+            outputFile << subA << " = " << proteinA;
+            outputFile << " : ";
+            outputFile << subB << " = " << proteinB;
+            outputFile << endl;
         }
     }
 }
@@ -120,7 +123,7 @@ void difference(string sequenceA, string sequenceB, codonTable_t codonTable){
 // Debug: read out the codon array
 void debugReadArray(codonTable_t codonTable){
     for (int i=0; i < RNAArrayLength; i++){
-        cout << codonTable[i][0] << " " << codonTable[i][1] << endl;
+        outputFile << codonTable[i][0] << " " << codonTable[i][1] << endl;
     }
 }
 
@@ -136,31 +139,34 @@ string loadSequence(ifstream &file){
 
 
 int main() {
-    codonTable_t codonTable;
-    ifstream RNACodonList("Codons.txt");
-    readRNACodonTable(RNACodonList, codonTable);
-    // Sort codon table alphabetically
-    sortCodons(codonTable);
+    if (outputFile.is_open()){
+        outputFile << "HNR1 Sequence Processor Output" << endl;
+        codonTable_t codonTable;
+        ifstream RNACodonList("Codons.txt");
+        readRNACodonTable(RNACodonList, codonTable);
+        // Sort codon table alphabetically
+        sortCodons(codonTable);
 
-    ifstream chickenFile("ChickenHNR1.txt");
-    ifstream humanFile("HumanHNR1.txt");
-    ifstream chimpFile("ChimpanzeeHNR1.txt");
-    // Build strings out of files
-    string chickenSequence = loadSequence(chickenFile);
-    string humanSequence = loadSequence(humanFile);
-    string chimpSequence = loadSequence(chimpFile);
-    // Compare chicken and human HNR1 sequences
-    cout << endl << "Comparing chicken to human:" << endl;
-    difference(chickenSequence, humanSequence, codonTable);
-    
-    // Compare human and chimp sequences
-    cout << endl << "Comparing human to chimp:" << endl;
-    difference(humanSequence, chimpSequence, codonTable);
-    
-    // Compare chicken and chimp sequences
-    cout << endl << "Comparing chicken to chimp:" << endl;
-    difference(chickenSequence, chimpSequence, codonTable);
-    
+        ifstream chickenFile("ChickenHNR1.txt");
+        ifstream humanFile("HumanHNR1.txt");
+        ifstream chimpFile("ChimpanzeeHNR1.txt");
+        // Build strings out of files
+        string chickenSequence = loadSequence(chickenFile);
+        string humanSequence = loadSequence(humanFile);
+        string chimpSequence = loadSequence(chimpFile);
+        // Compare chicken and human HNR1 sequences
+        outputFile << endl << "Comparing chicken to human:" << endl;
+        difference(chickenSequence, humanSequence, codonTable);
+        
+        // Compare human and chimp sequences
+        outputFile << endl << "Comparing human to chimp:" << endl;
+        difference(humanSequence, chimpSequence, codonTable);
+        
+        // Compare chicken and chimp sequences
+        outputFile << endl << "Comparing chicken to chimp:" << endl;
+        difference(chickenSequence, chimpSequence, codonTable);
+    } else cout
+        << "Could not open output file" << endl;
     return 0;
 }
 
