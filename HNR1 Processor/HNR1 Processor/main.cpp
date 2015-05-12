@@ -3,7 +3,17 @@
  Author: Ben Rockhold
  Date: 05/5/15
  Description:
-    Does stuff with some files.
+    A simple program to compare DNA sequences.
+    Starts by reading in "codons.txt" for a list of RNA codons, and each 
+        codon's associated protein (by abbreviated name). Creates a 2D array
+        from the values contained [codon, protein]
+    This array is then sorted alphabetically (this is not neccessary).
+    Then reads in three files,
+        ("ChickenHNR1.txt" "HumanHNR1.txt" "ChimpanzeeHNR1.txt")
+        and creates strings representing them.
+    Finally, the strings are compared by protein, and if differences are found,
+        they are reported. Note that the differences are in proteins, not
+        the codon that creates them!
  */
 
 #include <fstream> // file IO
@@ -12,6 +22,7 @@
 #include <string>
 using namespace std;
 
+// This value *must* match the number of lines in "codons.txt"
 const int RNAArrayLength = 65;
 
 // Read each line of an ifstream (up to RNAArrayLength lines) and write
@@ -146,7 +157,7 @@ int main() {
     // Compare chicken and chimp sequences
     cout << endl << "Comparing chicken to chimp:" << endl;
     difference(chickenSequence, chimpSequence, codonArray);
-        
+    
     return 0;
 }
 
