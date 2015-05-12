@@ -22,26 +22,30 @@
 #include <string>
 using namespace std;
 
+
 // This value *must* match the number of lines in "codons.txt"
 const int RNAArrayLength = 65;
 
+// The codonTable is a list of every codon, and the single-character
+// abbreviation of the protein it encoes.
+typedef string codonTable_t[RNAArrayLength][2];
+
 // Read each line of an ifstream (up to RNAArrayLength lines) and write
 // the first and second words on each line into 2D array "codonArray"
-void readRNACodonTable(ifstream &inFile,
-                       string codonArray[RNAArrayLength][2]){
+void readRNACodonTable(ifstream &inFile, codonTable_t codonTable){
     string a, b;
     if (inFile.is_open() &! inFile.eof()){
         for (int i=0; i < RNAArrayLength; i++){
             inFile >> a >> b;
-            codonArray[i][0] = a;
-            codonArray[i][1] = b;
+            codonTable[i][0] = a;
+            codonTable[i][1] = b;
         }
     }
 }
 
 // Given a 2D array of [codon, abbreviation], sort the array by codon
 // (modifies original array and returns nothing)
-void sortCodons(string codonTable[RNAArrayLength][2]){
+void sortCodons(codonTable_t codonTable){
     string previous(codonTable[0][0]), next, temp[2];
     bool ordered = false;
     // Lets try to bubblesort codons alphabetically!
@@ -65,20 +69,19 @@ void sortCodons(string codonTable[RNAArrayLength][2]){
                 codonTable[inner+1][0] = temp[0];
                 codonTable[inner+1][1] = temp[1];
             } // swapping complete
-        }
-    }
+        } // end inner
+    } // end outer
 }
 
 // Given a string "codon" and an array of codon abbreviations, return
 // the corresponding abbreviation for this codon
-string codonLookup(string codon, string codonTable[RNAArrayLength][2]){
-    //cout << "(" << codon << ")";
+string codonLookup(string codon, codonTable_t codonTable){
     for (int i=0; i < RNAArrayLength; i++){
         if (codonTable[i][0] == codon){
             return codonTable[i][1];
         }
     }
-    return "Invalid Codon";
+    return "Invalid Codon"; // bad way to handle this error
 }
 
 // Given a string, swap any T characters with U
@@ -91,14 +94,13 @@ string DNAtoRNA(string DNA){
     return DNA;
 }
 
-// Given two seqences, prints the position and base of each codon difference
-void difference(string sequenceA,
-                string sequenceB,
-                string codonTable[RNAArrayLength][2]){
+// Given two seqences, prints the position and base of each protein difference
+void difference(string sequenceA, string sequenceB, codonTable_t codonTable){
     if (sequenceA.length() != sequenceB.length()){
         cout << "Length error" << endl;
         return;
     }
+    // read both strings in substring bites of 3
     for (int i=0; i < sequenceA.length(); i+=3){
         string subA = DNAtoRNA(sequenceA.substr(i,3));
         string subB = DNAtoRNA(sequenceB.substr(i,3));
@@ -116,26 +118,30 @@ void difference(string sequenceA,
 }
 
 // Debug: read out the codon array
-void debugReadArray(string codonArray[RNAArrayLength][2]){
+void debugReadArray(codonTable_t codonTable){
     for (int i=0; i < RNAArrayLength; i++){
-        cout << codonArray[i][0] << " " << codonArray[i][1] << endl;
+        cout << codonTable[i][0] << " " << codonTable[i][1] << endl;
     }
 }
 
 // given an ifstream, return a string with the file's contents
 string loadSequence(ifstream &file){
     if (file){
-        return(string((istreambuf_iterator<char>(file)),
+        string sequence = (string((istreambuf_iterator<char>(file)),
                        istreambuf_iterator<char>()));
+        sequence = sequence.substr(0,sequence.length()-sequence.length()%3);
+        return sequence;
     }
     return "File read failure";
 }
 
 
 int main() {
-    string codonArray[RNAArrayLength][2];
+    codonTable_t codonTable;
     ifstream RNACodonList("Codons.txt");
-    readRNACodonTable(RNACodonList, codonArray);
+    readRNACodonTable(RNACodonList, codonTable);
+    // Sort codon table alphabetically
+    sortCodons(codonTable);
 
     ifstream chickenFile("ChickenHNR1.txt");
     ifstream humanFile("HumanHNR1.txt");
@@ -144,19 +150,17 @@ int main() {
     string chickenSequence = loadSequence(chickenFile);
     string humanSequence = loadSequence(humanFile);
     string chimpSequence = loadSequence(chimpFile);
-    // Sort codon array alphabetically
-    sortCodons(codonArray);
     // Compare chicken and human HNR1 sequences
     cout << endl << "Comparing chicken to human:" << endl;
-    difference(chickenSequence, humanSequence, codonArray);
+    difference(chickenSequence, humanSequence, codonTable);
     
     // Compare human and chimp sequences
     cout << endl << "Comparing human to chimp:" << endl;
-    difference(humanSequence, chimpSequence, codonArray);
+    difference(humanSequence, chimpSequence, codonTable);
     
     // Compare chicken and chimp sequences
     cout << endl << "Comparing chicken to chimp:" << endl;
-    difference(chickenSequence, chimpSequence, codonArray);
+    difference(chickenSequence, chimpSequence, codonTable);
     
     return 0;
 }
